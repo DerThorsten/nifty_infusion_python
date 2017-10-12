@@ -24,7 +24,7 @@ execute_process(
 # Add The module
 #-------------------------------------------------------------------------------------------------------------------
 pybind11_add_module(nifty_infusion main.cpp)
-
+target_link_libraries(nifty_infusion ${NIFTY_EXTERNAL_LIBRARIES})
 
 
 

@@ -54,7 +54,9 @@ include_directories(include)
 
 # nifty infusion related
 find_package(NIFTY_INFUSION REQUIRED)
-#find_package(NIFTY_INFUSION_EXTERNALS REQUIRED)
+include_directories(${NIFTY_INFUSION_INCLUDE_DIRS})
+
+
 
 # python related
 find_package(NumPy REQUIRED)
