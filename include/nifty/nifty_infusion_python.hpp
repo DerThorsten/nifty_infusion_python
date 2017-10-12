@@ -6,6 +6,9 @@
 #include "xtensor/xarray.hpp"
 #include "xtensor/xexpression.hpp"
 
+
+#include "nifty/infusion/infusion.hpp"
+
 #include <cmath>
 #include <numeric>
 

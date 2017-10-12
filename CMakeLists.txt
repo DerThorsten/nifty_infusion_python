@@ -17,17 +17,7 @@ project(NIFTY_INFUSION_PYTHON)
 include(CheckCXXCompilerFlag)
 
 
-#option(BUILD_TESTS     ON)
-#option(BUILD_PYTHON    ON)
 
-
-SET(BUILD_TESTS  ON CACHE BOOL "BUILD_TESTS Option"  FORCE)
-SET(BUILD_PYTHON ON CACHE BOOL "BUILD_PYTHON Option" FORCE)
-
-#-------------------------------------------------------------------------------------------------------------------
-# cmake packages
-#-------------------------------------------------------------------------------------------------------------------
-include(ExternalProject)
 
 #-------------------------------------------------------------------------------------------------------------------
 # check for c++ 14 support
@@ -61,70 +51,22 @@ file(GLOB_RECURSE headers include/*.hxx)
 include_directories(include)
 
 
-#-------------------------------------------------------------------------------------------------------------------
-# external projects which need to be in the `include tree`
-#-------------------------------------------------------------------------------------------------------------------
-
-#---------------------------------------------------
-# GSL: Guideline Support Library  
-#---------------------------------------------------
-ExternalProject_Add(
-    external_gsl
-    PREFIX ${CMAKE_BINARY_DIR}/external_projects/GSL
-    GIT_REPOSITORY https://github.com/Microsoft/GSL
-    GIT_TAG master
-    TIMEOUT 5
-    #UPDATE_COMMAND ${GIT_EXECUTABLE} pull
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-    LOG_DOWNLOAD ON
-)
-# Expose required variable (DOCTEST_INCLUDE_DIR) to parent scope
-ExternalProject_Get_Property(external_gsl source_dir)
-set(GSL_INCLUDE_DIR ${source_dir}/include/ CACHE INTERNAL "Path to include folder for GSL")
-include_directories(${GSL_INCLUDE_DIR})
-
-#---------------------------------------------------
-# xtensor 
-#---------------------------------------------------
-ExternalProject_Add(
-    external_xtensor
-    PREFIX ${CMAKE_BINARY_DIR}/external_projects/xtensor
-    GIT_REPOSITORY https://github.com/QuantStack/xtensor
-    GIT_TAG 0.10.7
-    TIMEOUT 5
-    #UPDATE_COMMAND ${GIT_EXECUTABLE} pull
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-    LOG_DOWNLOAD ON
-)
-# Expose required variable (DOCTEST_INCLUDE_DIR) to parent scope
-ExternalProject_Get_Property(external_xtensor source_dir)
-set(XTENSOR_INCLUDE_DIR ${source_dir}/include/ CACHE INTERNAL "Path to include folder for xtensor")
-include_directories(${XTENSOR_INCLUDE_DIR})
-
-
-# meta target for all to handle dependencies
-add_custom_target(externl_headers)
-add_dependencies(externl_headers
-    external_gsl 
-    external_xtensor
-)
 
 
 
+find_package(NumPy REQUIRED)
+include_directories(${NUMPY_INCLUDE_DIRS})
+
+find_package(pybind11 REQUIRED)
+include_directories(${pybind11_INCLUDE_DIRS})
+
+find_package(xtensor REQUIRED)
+include_directories(${xtensor_INCLUDE_DIRS})
+
+find_package(xtensor-python REQUIRED)
+include_directories(${xtensor-python_INCLUDE_DIRS})
 
 
-
-
-#-------------------------------------------------------------------------------------------------------------------
-# enable `make test` in root dir
-#-------------------------------------------------------------------------------------------------------------------
-if(BUILD_TESTS)
-    enable_testing()
-endif()
 
 #------------------------------------------------------------------------------------------------------------------
 # src folder
